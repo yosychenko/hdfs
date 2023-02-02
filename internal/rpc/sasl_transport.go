@@ -45,7 +45,7 @@ func (t *saslTransport) readResponse(r io.Reader, method string, requestID int32
 
 	if t.privacy {
 		// Decrypt the blob, which then looks like a normal RPC response.
-		decrypted, err := crypto.DecryptMessage(wrapToken.Payload, t.sessionKey, keyusage.GSSAPI_ACCEPTOR_SEAL)
+		decrypted, err := crypto.DecryptMessage(wrapToken.Payload, t.sessionKey, keyusage.GSSAPI_ACCEPTOR_SIGN)
 		if err != nil {
 			return err
 		}
@@ -56,7 +56,7 @@ func (t *saslTransport) readResponse(r io.Reader, method string, requestID int32
 		}
 	} else {
 		// Verify the checksum; the blob is just a normal RPC response.
-		_, err = wrapToken.Verify(t.sessionKey, keyusage.GSSAPI_ACCEPTOR_SEAL)
+		_, err = wrapToken.Verify(t.sessionKey, keyusage.GSSAPI_ACCEPTOR_SIGN)
 		if err != nil {
 			return fmt.Errorf("unverifiable message from namenode: %s", err)
 		}

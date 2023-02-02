@@ -106,7 +106,7 @@ func (c *NamenodeConnection) doKerberosHandshake() error {
 		return err
 	}
 
-	_, err = nnToken.Verify(sessionKey, keyusage.GSSAPI_ACCEPTOR_SEAL)
+	_, err = nnToken.Verify(sessionKey, keyusage.GSSAPI_ACCEPTOR_SIGN)
 	if err != nil {
 		return fmt.Errorf("invalid server token: %s", err)
 	}
