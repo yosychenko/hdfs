@@ -35,7 +35,7 @@ func (t *saslTransport) readResponse(r io.Reader, method string, requestID int32
 	}
 
 	// The SaslProto contains the actual payload.
-	var wrapToken gssapi.WrapToken
+	wrapToken := gssapi.WrapTokenV1{}
 	err = wrapToken.Unmarshal(sasl.GetToken(), true)
 	if err != nil {
 		return err

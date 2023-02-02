@@ -100,7 +100,7 @@ func (c *NamenodeConnection) doKerberosHandshake() error {
 		return err
 	}
 
-	var nnToken gssapi.WrapToken
+	nnToken := gssapi.WrapTokenV1{}
 	err = nnToken.Unmarshal(resp.GetToken(), true)
 	if err != nil {
 		return err
@@ -114,12 +114,12 @@ func (c *NamenodeConnection) doKerberosHandshake() error {
 	// Sign the payload and send it back to the namenode.
 	// TODO: Make sure we can support what is required based on what's in the
 	// payload.
-	signed, err := gssapi.NewInitiatorWrapToken(nnToken.Payload, sessionKey)
+	signed, err := gssapi.NewInitiatorWrapTokenV1(&nnToken, sessionKey)
 	if err != nil {
 		return err
 	}
 
-	signedBytes, err := signed.Marshal()
+	signedBytes, err := signed.Marshal(sessionKey)
 	if err != nil {
 		return err
 	}
